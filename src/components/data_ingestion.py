@@ -9,7 +9,6 @@ from src.entity.artifact_entity import DataIngestionArtifact
 from src.exception import MyException
 from src.logger import logging
 from src.data_access.proj1_data import proj1Data
-
 class DataIngestion:
     def __init__(self, data_ingestion_config:DataIngestionConfig = DataIngestionConfig()):
         '''
@@ -33,7 +32,7 @@ class DataIngestion:
         try :
             logging.info(f"exporting data from mongodb")
             my_data= proj1Data()
-            dataframe = my_data.export_collectio_as_dataframe(collection_name=self.data_ingestion_config.collection_name)
+            dataframe = my_data.export_collection_as_dataframe(name=self.data_ingestion_config.collection_name)
             logging.info(f"sahpe of dataframe:{dataframe.shape}")
             feature_store_file_path= self.data_ingestion_config.feature_store_file_path
             dir_path = os.path.dirname(feature_store_file_path)
@@ -71,7 +70,7 @@ class DataIngestion:
 
 
 
-    def intiat_data_ingestion(self) ->DataIngestionArtifact:
+    def intiate_data_ingestion(self) ->DataIngestionArtifact:
         """
         Method Name : Intiate_data_ingestion
         Description : This method intiate the data ingestion components of traning pipeline

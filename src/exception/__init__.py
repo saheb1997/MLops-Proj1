@@ -12,7 +12,7 @@ def error_message_detail(error:Exception, error_detail:sys) ->str:
 
     #create a formatted string with the error message and the file name
     line_number  = exc_tb.tb_lineno
-    error_message = f'{error} in {file_name} at line {line_number}'
+    error_message = f"Error occured on pyhon script: [{file_name}] at line number [{line_number}]: {str(error)}"
 
     logging.error(error_message)
 

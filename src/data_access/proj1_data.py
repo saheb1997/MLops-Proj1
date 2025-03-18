@@ -21,7 +21,7 @@ class proj1Data:
         except Exception as e:
             raise MyException(e,sys)
     
-    def export_collectio_as_dataframe (self, collection_name: str ,database_name : Optional[str]= None) ->pd.DataFrame:
+    def export_collection_as_dataframe (self, collection_name: str ,database_name : Optional[str]= None) ->pd.DataFrame:
         '''
         Exports an entire MongoDB collection as a pandas 
         
