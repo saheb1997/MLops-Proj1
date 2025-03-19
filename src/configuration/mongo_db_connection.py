@@ -5,59 +5,60 @@ import certifi
 
 from src.exception import MyException
 from src.logger import logging
-from src.constants import DATABASE_NAME , MONGODB_URL_KEY
+from src.constants import DATABASE_NAME, MONGODB_URL_KEY
 
+# Load the certificate authority file to avoid timeout errors when connecting to MongoDB
 ca = certifi.where()
 
 class MongoDBClient:
-    '''
-    MongoDBClient is responsible for establish a connection to the mongoDB database
+    """
+    MongoDBClient is responsible for establishing a connection to the MongoDB database.
 
     Attributes:
-    ------------
+    ----------
     client : MongoClient
-        A shared MongoClient instance for the class
-    databse: DataBase
+        A shared MongoClient instance for the class.
+    database : Database
         The specific database instance that MongoDBClient connects to.
-    
+
     Methods:
-    -------------
-    __init__(datas_name: str) ->None
-        Initializes the mongoDb connection using the given database name.
-    '''
+    -------
+    __init__(database_name: str) -> None
+        Initializes the MongoDB connection using the given database name.
+    """
 
-    client =None
+    client = None  # Shared MongoClient instance across all MongoDBClient instances
 
-    def __init__(self, database_name: str =DATABASE_NAME) ->None:
-        '''
-        Initializes a connection to the MongoDB database. If no existing connection is found it establish a new one.
+    def __init__(self, database_name: str = DATABASE_NAME) -> None:
+        """
+        Initializes a connection to the MongoDB database. If no existing connection is found, it establishes a new one.
+
         Parameters:
-        -----------
+        ----------
         database_name : str, optional
-            Name of the MongoDB database to connect to.Default is set by Database_name constant.
-        
+            Name of the MongoDB database to connect to. Default is set by DATABASE_NAME constant.
+
         Raises:
-        -----------
-        My Excpetion
-         If there is an issue connection to MongoDB or if the environment varialble for the mongoDB url is not set.
-         '''
+        ------
+        MyException
+            If there is an issue connecting to MongoDB or if the environment variable for the MongoDB URL is not set.
+        """
         try:
-            #check if mongoDB connection already build or not if not build a new one.
+            # Check if a MongoDB client connection has already been established; if not, create a new one
             if MongoDBClient.client is None:
-                mongo_db_url = os.getenv(MONGODB_URL_KEY)
+                mongo_db_url = os.getenv(MONGODB_URL_KEY)  # Retrieve MongoDB URL from environment variables
                 if mongo_db_url is None:
-                    raise Exception("Environment variable '{MONGODB_URL_KEY}' is not set.")
-                MongoDBClient.client =pymongo.MongoClient(mongo_db_url, tlsCAFile=ca)
-            
-            #use the shared MongoClient for this instance
-
+                    raise Exception(f"Environment variable '{MONGODB_URL_KEY}' is not set.")
+                
+                # Establish a new MongoDB client connection
+                MongoDBClient.client = pymongo.MongoClient(mongo_db_url, tlsCAFile=ca)
+                
+            # Use the shared MongoClient for this instance
             self.client = MongoDBClient.client
-            self.database= self.client[database_name]
-            self.database_name= database_name
-            logging.info("MongoDB connection successfull")
+            self.database = self.client[database_name]  # Connect to the specified database
+            self.database_name = database_name
+            logging.info("MongoDB connection successful.")
+            
         except Exception as e:
-            #raise a custom exception with traceback details if connection fails
+            # Raise a custom exception with traceback details if connection fails
             raise MyException(e, sys)
-
-
-    
