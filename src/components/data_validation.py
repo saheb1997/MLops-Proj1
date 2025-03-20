@@ -78,6 +78,7 @@ class DataValidation:
             train_df ,test_df =(DataValidation.read_data(file_path=self.data_ingestion_artifact.trained_file_path),
                                 DataValidation.read_data(file_path=self.data_ingestion_artifact.test_file_path))
             logging.info("Read train and test data")
+            #checking col len of dataframe for train and test data
             status = self.validation_number_of_columns(dataframe=train_df)
             if not status:
                 validation_error_msg += f"Columns are missing in training dataframe. "
